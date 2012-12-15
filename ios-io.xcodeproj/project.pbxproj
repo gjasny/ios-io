@@ -1,0 +1,241 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		467F1EF0167CBC890073426F /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 467F1EEF167CBC890073426F /* CoreFoundation.framework */; };
+		467F1EF3167CBC890073426F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 467F1EF2167CBC890073426F /* main.m */; };
+		467F1F01167CC3270073426F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 467F1F00167CC3270073426F /* Foundation.framework */; };
+		467F1F03167CC3BD0073426F /* MobileDevice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 467F1F02167CC3BD0073426F /* MobileDevice.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		467F1EE9167CBC890073426F /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		467F1EEB167CBC890073426F /* ios-io */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ios-io"; sourceTree = BUILT_PRODUCTS_DIR; };
+		467F1EEF167CBC890073426F /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		467F1EF2167CBC890073426F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		467F1EFB167CBCE80073426F /* MobileDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MobileDevice.h; sourceTree = "<group>"; };
+		467F1F00167CC3270073426F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		467F1F02167CC3BD0073426F /* MobileDevice.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileDevice.framework; path = ../../../../System/Library/PrivateFrameworks/MobileDevice.framework; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		467F1EE8167CBC890073426F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				467F1F03167CC3BD0073426F /* MobileDevice.framework in Frameworks */,
+				467F1F01167CC3270073426F /* Foundation.framework in Frameworks */,
+				467F1EF0167CBC890073426F /* CoreFoundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		467F1EE0167CBC890073426F = {
+			isa = PBXGroup;
+			children = (
+				467F1F02167CC3BD0073426F /* MobileDevice.framework */,
+				467F1F00167CC3270073426F /* Foundation.framework */,
+				467F1EF1167CBC890073426F /* ios-io */,
+				467F1EEE167CBC890073426F /* Frameworks */,
+				467F1EEC167CBC890073426F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		467F1EEC167CBC890073426F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				467F1EEB167CBC890073426F /* ios-io */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		467F1EEE167CBC890073426F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				467F1EEF167CBC890073426F /* CoreFoundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		467F1EF1167CBC890073426F /* ios-io */ = {
+			isa = PBXGroup;
+			children = (
+				467F1EFB167CBCE80073426F /* MobileDevice.h */,
+				467F1EF2167CBC890073426F /* main.m */,
+			);
+			path = "ios-io";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		467F1EEA167CBC890073426F /* ios-io */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 467F1EF8167CBC890073426F /* Build configuration list for PBXNativeTarget "ios-io" */;
+			buildPhases = (
+				467F1EE7167CBC890073426F /* Sources */,
+				467F1EE8167CBC890073426F /* Frameworks */,
+				467F1EE9167CBC890073426F /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "ios-io";
+			productName = "ios-io";
+			productReference = 467F1EEB167CBC890073426F /* ios-io */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		467F1EE2167CBC890073426F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = "Gregor Jasny";
+			};
+			buildConfigurationList = 467F1EE5167CBC890073426F /* Build configuration list for PBXProject "ios-io" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 467F1EE0167CBC890073426F;
+			productRefGroup = 467F1EEC167CBC890073426F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				467F1EEA167CBC890073426F /* ios-io */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		467F1EE7167CBC890073426F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				467F1EF3167CBC890073426F /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		467F1EF6167CBC890073426F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		467F1EF7167CBC890073426F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		467F1EF9167CBC890073426F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		467F1EFA167CBC890073426F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		467F1EE5167CBC890073426F /* Build configuration list for PBXProject "ios-io" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				467F1EF6167CBC890073426F /* Debug */,
+				467F1EF7167CBC890073426F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		467F1EF8167CBC890073426F /* Build configuration list for PBXNativeTarget "ios-io" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				467F1EF9167CBC890073426F /* Debug */,
+				467F1EFA167CBC890073426F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 467F1EE2167CBC890073426F /* Project object */;
+}
