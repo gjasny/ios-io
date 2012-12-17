@@ -15,6 +15,7 @@ typedef enum {
     OP_NONE,
     OP_LIST_DEVICES,
     OP_UPLOAD_FILE,
+    OP_DOWNLOAD_FILE,
     OP_LIST_FILES
 } operation_t;
 
@@ -23,8 +24,8 @@ typedef struct am_device * AMDeviceRef;
 static bool found_device = false, debug = false, verbose = false, quiet = false;
 static NSString *app_path = nil;
 static NSString *device_id = nil;
-static NSString *doc_file_path = nil;
-static NSString *target_filename = nil;
+static NSString *copy_source = nil;
+static NSString *copy_dest = nil;
 static NSString *bundle_id = nil;
 static NSString *args = nil;
 
@@ -143,7 +144,7 @@ static bool upload_file(afc_connection* afc_conn_p, const char* source_name, con
     
     // open destination
     afc_file_ref file_ref;
-    afc_error_t err = AFCFileRefOpen(afc_conn_p, dest_name, 3, &file_ref);
+    afc_error_t err = AFCFileRefOpen(afc_conn_p, dest_name, 2, &file_ref);
     if (err) {
         fclose(pSource);
         return false;
@@ -167,6 +168,40 @@ static bool upload_file(afc_connection* afc_conn_p, const char* source_name, con
     return true;
 }
 
+
+static bool download_file(afc_connection* afc_conn_p, const char* source_name, const char* dest_name)
+{
+    // open source
+    afc_file_ref file_ref;
+    afc_error_t err = AFCFileRefOpen(afc_conn_p, source_name, 1, &file_ref);
+    if (err) {
+        return false;
+    }
+
+    // open destination
+    FILE* pDest = fopen(dest_name, "w");
+    if (!pDest) {
+        AFCFileRefClose(afc_conn_p, file_ref);
+        return false;
+    }
+
+    size_t bufferSize = 4096;
+    uint8_t buffer[bufferSize];
+    unsigned int readSize;
+    
+    do {
+        readSize = (unsigned int)bufferSize;
+        err =  AFCFileRefRead(afc_conn_p, file_ref, buffer, &readSize);
+        
+        fwrite(buffer, 1, readSize, pDest);
+    } while (readSize);
+
+    fclose(pDest);
+    AFCFileRefClose(afc_conn_p, file_ref);
+
+    return true;
+}
+
 static void upload(AMDeviceRef device) {
     service_conn_t houseFd = start_house_arrest_service(device);
         
@@ -176,29 +211,24 @@ static void upload(AMDeviceRef device) {
     
     //        read_dir(houseFd, NULL, "/");
 
-    if (target_filename == nil)
-    {
-        target_filename = get_filename_from_path(doc_file_path);
-    }
-    NSString *target_path = [NSString pathWithComponents:@[@"/Documents/", target_filename]];
+    NSString *destination = [NSString pathWithComponents:@[@"/Documents/", copy_dest]];
 
-#if 0
-    size_t file_size;
-    const void* file_content = read_file_to_memory(doc_file_path, &file_size);
+    upload_file(afc_conn_p, [copy_source UTF8String], [destination UTF8String]);
+
+    assert(AFCConnectionClose(afc_conn_p) == 0);
+}
+
+static void download(AMDeviceRef device)
+{
+    service_conn_t houseFd = start_house_arrest_service(device);
     
-    if (!file_content)
-    {
-        Log(@"Could not open file: %@\n", doc_file_path);
-        exit(EXIT_FAILURE);
-    }
+    afc_connection afc_conn;
+    afc_connection* afc_conn_p = &afc_conn;
+    AFCConnectionOpen(houseFd, 0, &afc_conn_p);
     
-    afc_file_ref file_ref;
-    assert(AFCFileRefOpen(afc_conn_p, [target_path UTF8String], 3, &file_ref) == 0);
-    assert(AFCFileRefWrite(afc_conn_p, file_ref, file_content, (unsigned int)file_size) == 0);
-    assert(AFCFileRefClose(afc_conn_p, file_ref) == 0);
-#else
-    upload_file(afc_conn_p, [doc_file_path UTF8String], [target_path UTF8String]);
-#endif
+    NSString *source = [NSString pathWithComponents:@[@"/Documents/", copy_source]];
+    
+    download_file(afc_conn_p, [source UTF8String], [copy_dest UTF8String]);
 
     assert(AFCConnectionClose(afc_conn_p) == 0);
 }
@@ -229,8 +259,15 @@ static void handle_device(AMDeviceRef device)
         
         upload(device);
         
-        Log(@"[100%%] file sent %s\n", doc_file_path);
+        Log(@"[100%%] file sent %@ -> %@\n", copy_source, copy_dest);
         
+    } else if (operation == OP_DOWNLOAD_FILE) {
+        Log(@"[  0%%] Found device (%@), receiving file\n", found_device_id);
+        
+        download(device);
+        
+        Log(@"[100%%] file received %@ -> %@\n", copy_source, copy_dest);
+            
     } else if (operation == OP_LIST_FILES) {
         Log(@"[  0%%] Found device (%@), listing / ...\n", found_device_id);
         
@@ -265,8 +302,12 @@ static void timeout_callback(CFRunLoopTimerRef timer, void *info) {
 static void usage(const char* app) {
     Log(@"usage: %s [-q/--quiet] [-t/--timeout timeout(seconds)] [-v/--verbose] <command> [<args>] \n\n", app);
     Log(@"Commands available:\n");
-    Log(@"   upload     [--id=device_id] --bundle-id=<bundle id> --file=filename [--target=filename]\n");
+    Log(@"   upload     [--id=device_id] --bundle-id=<bundle id> --source=filename --dest=filename\n");
     Log(@"    * Uploads a file to the documents directory of the app specified with the bundle \n");
+    Log(@"      identifier (eg com.foo.MyApp) to the specified device, or all attached devices if\n");
+    Log(@"      none are specified. \n\n");
+    Log(@"   download   [--id=device_id] --bundle-id=<bundle id> --source=filename --dest=filename\n");
+    Log(@"    * Downloads a file to the documents directory of the app specified with the bundle \n");
     Log(@"      identifier (eg com.foo.MyApp) to the specified device, or all attached devices if\n");
     Log(@"      none are specified. \n\n");
     Log(@"   list-files [--id=device_id] --bundle-id=<bundle id> \n");
@@ -279,7 +320,8 @@ static void usage(const char* app) {
 
 static bool args_are_valid() {
     return
-        (operation == OP_UPLOAD_FILE && bundle_id && doc_file_path) ||
+        (operation == OP_UPLOAD_FILE && bundle_id && copy_source && copy_dest) ||
+        (operation == OP_DOWNLOAD_FILE && bundle_id && copy_source && copy_dest) ||
         (operation == OP_LIST_FILES && bundle_id) ||
         (operation == OP_LIST_DEVICES);
 }
@@ -292,8 +334,8 @@ int main(int argc, char *argv[]) {
         
         { "id", required_argument, NULL, 'i' },
         { "bundle", required_argument, NULL, 'b' },
-        { "file", required_argument, NULL, 'f' },
-        { "target", required_argument, NULL, 1 },
+        { "source", required_argument, NULL, 's' },
+        { "dest", required_argument, NULL, 1 },
         { "bundle-id", required_argument, NULL, 0 },
         
         { "debug", no_argument, NULL, 'd' },
@@ -303,7 +345,7 @@ int main(int argc, char *argv[]) {
     };
 
     char ch;
-    while ((ch = getopt_long(argc, argv, "qvi:b:f:da:t:", global_longopts, NULL)) != -1)
+    while ((ch = getopt_long(argc, argv, "qvi:b:s:da:t:", global_longopts, NULL)) != -1)
     {
         switch (ch) {
             case 0:
@@ -324,11 +366,11 @@ int main(int argc, char *argv[]) {
             case 'b':
                 app_path = [[NSString alloc] initWithUTF8String:optarg];
                 break;
-            case 'f':
-                doc_file_path = [[NSString alloc] initWithUTF8String:optarg];
+            case 's':
+                copy_source = [[NSString alloc] initWithUTF8String:optarg];
                 break;
             case 1:
-                target_filename = [[NSString alloc] initWithUTF8String:optarg];
+                copy_dest = [[NSString alloc] initWithUTF8String:optarg];
                 break;
             case 'a':
                 args = [[NSString alloc] initWithUTF8String:optarg];
@@ -353,6 +395,8 @@ int main(int argc, char *argv[]) {
         operation = OP_LIST_DEVICES;
     } else if (strcmp (argv [optind], "upload") == 0) {
         operation = OP_UPLOAD_FILE;
+    } else if (strcmp (argv [optind], "download") == 0) {
+        operation = OP_DOWNLOAD_FILE;
     } else if (strcmp (argv [optind], "list-files") == 0) {
         operation = OP_LIST_FILES;
     } else {
